@@ -1,70 +1,57 @@
-# Getting Started with Create React App
+# Quick Attendance
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+>> Check the attendance quickly within a given list of students
 
-## Available Scripts
+## Abstract
 
-In the project directory, you can run:
+Quick Attendance is a SPA(Single Page Application) that helps TAs to check
+the attendance of the offline class. While moving around the classroom, they
+can mark a student's status by simply asking his/her student ID or name. One
+of the most convenient function it provides is initial search, initial search
+(초성검색 in Korean), which makes it shorter to figure out the student.
+Through utilizing this application, TAs are able to minimize the inconvenience
+of checking attendance and, furthermore, the students will be less bothered by
+TAs and concentrate on the lectures more.
 
-### `npm start`
+**Index Terms** Single Page Application, Reactjs, Mobile, IndexedDB
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Motivation
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+When it was the first offline class of HY-LIVE, checking the attendance was
+disaster. While moving around the class quietly and carefully, it heavily
+demands to ask the students for their student card and match them with the
+given roster. Even worse, the roster consisted with unordered names so it took
+almost linear time to find their names. The correctness was also matter. If TA
+had made some mistakes, there would have been a severe trouble later. In order
+to reduce the workload and guarantee the attendance, this application will
+have a significant role.
 
-### `npm test`
+## Requirement Analysis
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Quick Searching
 
-### `npm run build`
+Finding the student by his/her personal information should be done as soons as
+possible. To achieve this goal, searching by consonants for each letter is
+strongly helpful. In addition, student ID will be the identifier to figure out
+the student uniquely. If there are multiple students in a keyword,
+highlighting the matching items help a user to distinguish the target.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Marking
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+After finding the student, a user should be able to mark his/her attendance.
+This step will be processed in one-touch. There is only a click button for
+each student and its attendance is changed recursively after it is clicked.
+There would be more than one mark. (e.g. "empty", "attend" and "late")
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Logging and Saving
 
-### `npm run eject`
+Because attendance is sensitive for every students, all changes should be
+recorded as much as possible. The logging mechanism should be WAL(Write Ahead
+Logging). All logs also should be printed if necessary. In addition, to prevent
+the loss of data, indexedDB in browser will be used.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### Exporting
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+All checked attendances should be moved to the official spreadsheet. The list
+should be translated into korean within a single column, and its sequence
+should be correspond to the roster.
