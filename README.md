@@ -1,6 +1,6 @@
 # Quick Attendance
 
->> Check the attendance quickly within a given list of students
+> Assist Teaching Assistants to Check Attendance Quickly and Correctly
 
 ## Abstract
 

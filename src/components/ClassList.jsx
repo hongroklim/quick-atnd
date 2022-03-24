@@ -1,14 +1,17 @@
 import { Link } from "react-router-dom";
+import { useLiveQuery } from 'dexie-react-hooks';
 
-import classes from "../json/classList.json";
+import { db } from "../utils/db";
 
 const ClassList = () => {
+  const classes = useLiveQuery(() => db.classes.toArray());
+
   return (
     <div>
       <div>Quick Attendance</div>
       <ul>
-        {classes.map(e => (
-          <Link to={`/class?cid=${e.id}`} key={e.id}>
+        {classes?.map(e => (
+          <Link to={`/class?cid=${e.cid}`} key={e.cid}>
             <li>{e.label}</li>
           </Link>
         ))}

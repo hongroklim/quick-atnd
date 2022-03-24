@@ -1,52 +1,30 @@
 import React, { useState, useEffect, useCallback } from "react"
 import { useSearchParams } from "react-router-dom";
+import { useLiveQuery } from 'dexie-react-hooks';
 
 import AtndHeader from "./AtndHeader";
 import AtndFilter from "./AtndFilter";
 import AtndSearch from "./AtndSearch";
 import AtndList from "./AtndList";
 
-import {
-  getLatestPid,
-  generatePage,
-  loadPage
-} from "../utils/pageUtils"
-
-import classes from "../json/classList.json";
+import { db } from "../utils/db";
 
 const AtndLayout = (props) => {
   let [params, setParams] = useSearchParams();
 
-  const getClassId = useCallback(() => parseInt(params.get('cid')), [params]);
-  const getPageId = useCallback(() => parseInt(params.get('pid')), [params]);
+  const aClass = useLiveQuery(
+    () => db.classes.where('cid').equals(parseInt(params.get('cid'))).first(),
+    [params]);
 
-  useEffect(() => {
-    // Default pageId is the latest one
-    if (isNaN(getPageId())) {
-      // If there is no page, generate the new page (with side effect)
-      const cid = getClassId();
-      const pageId = getLatestPid(cid) || generatePage(cid);
-      setParams({ ...Object.fromEntries(params), pid: pageId });
-    }
-  }, [params, setParams, getClassId, getPageId]);
+  if(!aClass) return null;
 
-
-  const [aClass] = useState(classes.find(c => c.id === getClassId()));
-  const [page, setPage] = useState(loadPage(getPageId()));
-
-  const handleMovePage = (pid) => {
-    const pageId = pid || getLatestPid(getClassId()); 
-    setParams({ ...Object.fromEntries(params), pid: pageId });
-  }
-
-  const handleRenamePage = (label) => {
-    setPage({ ...page, label: label })
+  const handleMovePage = (nextPid) => {
+    setParams({ ...Object.fromEntries(params), pid: nextPid });
   }
 
   return (
     <>
-      <AtndHeader aClass={aClass} page={page}
-                  onMove={handleMovePage} onRename={handleRenamePage} />
+      <AtndHeader aClass={aClass} pid={parseInt(params.get('pid'))} onMove={handleMovePage} />
       <AtndFilter />
       <AtndSearch />
       <AtndList />

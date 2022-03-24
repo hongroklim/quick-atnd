@@ -1,44 +1,74 @@
-const AtndHeader = ({ aClass, page, onMove, onRename }) => {
-  const getPrev = (cid, pid) => 1;
-  const getNext = (cid, pid) => null;
+import React from "react";
+import { useLiveQuery } from 'dexie-react-hooks';
+
+import { db } from "../utils/db";
+
+const fetchPage = async (cid, pid) => {
+  const _page = await db.pages.get(pid);
+
+  // Right before the pageId
+  let _prevPid = null;
+  await db.pages.where('cid').equals(cid)
+    .eachPrimaryKey(k => {_prevPid = (_prevPid < k && k < pid) ? k : _prevPid});
+
+  // Right after the pageId
+  let _nextPid = Number.MAX_SAFE_INTEGER;
+  await db.pages.where('cid').equals(cid)
+    .eachPrimaryKey(k => {_nextPid = (_nextPid > k && k > pid) ? k : _nextPid})
+  _nextPid = _nextPid === Number.MAX_SAFE_INTEGER ? null : _nextPid;
+
+  return [_page, _prevPid, _nextPid];
+};
+
+const getTimestamp = () => {
+  const [dt, tm] = new Date(+new Date() + 3240 * 10000).toISOString().split("T");
+  return dt.replace(/\d{2}(\d{2})-(\d{2})-(\d{2})/g, '$1.$2.$3') +
+          ' ' + tm.replace(/(\d{2}):(\d{2}):(\d{2}).*/g, '$1:$2:$3');
+}
+
+const AtndHeader = ({ aClass, pid, onMove }) => {
+  const _rs = useLiveQuery(() => fetchPage(aClass.cid, pid), [aClass, pid]);
+  if (!_rs) return null;
+
+  const [page, prevPid, nextPid] = _rs;
 
   const handleMove = (e) => {
-    // TODO move the page
-    const pid = parseInt(e.target.getAttribute('data-pid'));
-    onMove(pid);
+    const newPid = parseInt(e.target.getAttribute('data-pid'));
+    onMove(newPid);
   }
 
   const handleRename = (e) => {
     const newLabel = window.prompt('Type a new name of this page.', page.label);
     if(newLabel && page.label !== newLabel){
-      // TODO rename the page
-      onRename(newLabel);
+      db.pages.put({ ...page, label: newLabel });
     }
   }
 
-  const handleDelete = (e) => {
+  const handleDelete = async (e) => {
+    if (!prevPid && !nextPid) {
+      alert('There should be at least one page.');
+      return;
+    }
+
     if(window.confirm('Are you sure to remove this page?')){
-      // TODO reload the page
-      const prevPid = getPrev(aClass.id, page.pid);
-      console.log('delete then reload the page');
+      await db.pages.delete(pid);
 
-      // Reload a new page
-      onMove(null);
+      // Next page is the following, otherwise the previous one.
+      onMove(nextPid ? nextPid : prevPid);
     }
   }
 
-  const handleAppend = (e) => {
-    // TODO append the new page
-    console.log('append');
-
-    // onMove(newPid);
+  const handleAppend = async (e) => {
+    const newPid = await db.pages.add({
+      cid: aClass.cid, label: getTimestamp()});
+    onMove(newPid);
   }
 
   return (
     <div>
       <button onClick={handleMove}
-              data-pid={getPrev(aClass.id, page.pid)}
-              disabled={!getPrev(aClass.id, page.pid)}> ◄◄ </button>
+              data-pid={prevPid}
+              disabled={!prevPid}> ◄◄ </button>
       <div>
         <div>{aClass.label}</div>
         <div>
@@ -47,10 +77,10 @@ const AtndHeader = ({ aClass, page, onMove, onRename }) => {
           <button onClick={handleDelete}> ❌ </button>
         </div>
       </div>
-      {!getNext(aClass.id, page.pid)
+      {!nextPid
         ? <button onClick={handleAppend}> + </button>
         : <button onClick={handleMove}
-                  data-pid={getNext(aClass.id, page.pid)}> ►► </button>}
+                  data-pid={nextPid}> ►► </button>}
     </div>
   )
 }
