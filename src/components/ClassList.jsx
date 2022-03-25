@@ -1,19 +1,31 @@
-import { Link } from "react-router-dom";
-import { useLiveQuery } from 'dexie-react-hooks';
+import { Link, useNavigate } from "react-router-dom";
 
 import { db } from "../utils/db";
 
+import { classes } from "../utils/loader";
+
 const ClassList = () => {
-  const classes = useLiveQuery(() => db.classes.toArray());
+  const navigate = useNavigate();
+
+  const handleLink = async (e) => {
+    e.preventDefault();
+
+    const cid = parseInt(e.currentTarget.getAttribute('data-cid'));
+    const pid = await db.pages
+                        .where('cid').equals(cid)
+                        .last(p => p ? p.pid : '');
+
+    navigate(`/class?cid=${cid}&pid=${pid}`);
+  }
 
   return (
     <div>
       <div>Quick Attendance</div>
       <ul>
-        {classes?.map(e => (
-          <Link to={`/class?cid=${e.cid}`} key={e.cid}>
-            <li>{e.label}</li>
-          </Link>
+        {Object.keys(classes).map(k => classes[k]).map(c => (
+          <div onClick={handleLink} data-cid={c.cid} key={c.cid}>
+            <li>{c.label}</li>
+          </div>
         ))}
       </ul>
       <ul>

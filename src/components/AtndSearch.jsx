@@ -1,5 +1,17 @@
 const AtndSearch = (props) => {
-  return (<>AtndSearch</>)
+  return (
+    <div>
+      <div>
+        <button>⚠️</button>
+      </div>
+
+      <div>
+      </div>
+
+      <div>
+      </div>
+    </div>
+  )
 }
 
 export default AtndSearch;

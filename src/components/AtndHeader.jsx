@@ -51,7 +51,7 @@ const AtndHeader = ({ aClass, pid, onMove }) => {
     }
 
     if(window.confirm('Are you sure to remove this page?')){
-      await db.pages.delete(pid);
+      db.deletePage(pid);
 
       // Next page is the following, otherwise the previous one.
       onMove(nextPid ? nextPid : prevPid);

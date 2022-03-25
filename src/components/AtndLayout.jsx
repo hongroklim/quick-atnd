@@ -1,33 +1,45 @@
-import React, { useState, useEffect, useCallback } from "react"
+import React, { useState } from "react"
 import { useSearchParams } from "react-router-dom";
-import { useLiveQuery } from 'dexie-react-hooks';
 
 import AtndHeader from "./AtndHeader";
 import AtndFilter from "./AtndFilter";
-import AtndSearch from "./AtndSearch";
 import AtndList from "./AtndList";
 
-import { db } from "../utils/db";
+import { classes, marks } from "../utils/loader";
+
+const getDefaultFilters = (aClass) => {
+  return {
+    rooms: aClass.rooms.map(e => e.rid),
+    marks: Object.keys(marks),
+    keyword: ''
+  };
+}
 
 const AtndLayout = (props) => {
   let [params, setParams] = useSearchParams();
 
-  const aClass = useLiveQuery(
-    () => db.classes.where('cid').equals(parseInt(params.get('cid'))).first(),
-    [params]);
+  const aClass = classes[parseInt(params.get('cid'))];
 
-  if(!aClass) return null;
+  const [filters, setFilters] = useState(getDefaultFilters(aClass));
 
   const handleMovePage = (nextPid) => {
     setParams({ ...Object.fromEntries(params), pid: nextPid });
   }
 
+  const handleFilterChange = (newFilters) => {
+    setFilters(newFilters);
+  }
+
   return (
     <>
-      <AtndHeader aClass={aClass} pid={parseInt(params.get('pid'))} onMove={handleMovePage} />
-      <AtndFilter />
-      <AtndSearch />
-      <AtndList />
+      <AtndHeader aClass={aClass} pid={parseInt(params.get('pid'))}
+                  onMove={handleMovePage} />
+
+      <AtndFilter roomList={aClass.rooms} filters={filters}
+                  onUpdate={handleFilterChange} />
+
+      <AtndList aClass={aClass} pid={parseInt(params.get('pid'))}
+                filters={filters} />
     </>
   )
 }
