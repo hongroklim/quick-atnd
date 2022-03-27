@@ -8,12 +8,12 @@ for(const c of jsonClasses){
 }
 
 // Marks
-const marks = {
-  E : {mcd: 'E', label: 'Empty',   emoji: '🔲'},
-  Y : {mcd: 'Y', label: 'Checked', emoji: '🟩'}
-}
-
 const MC_EMPTY = 'E';
 const MC_ATTEND = 'Y';
+
+const marks = {
+  [MC_EMPTY]  : {mcd: MC_EMPTY,  label: '',     emoji: '🔲'},
+  [MC_ATTEND] : {mcd: MC_ATTEND, label: '출석', emoji: '🟩'}
+}
 
 export { classes, marks, MC_EMPTY, MC_ATTEND };

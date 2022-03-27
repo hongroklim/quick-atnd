@@ -1,45 +1,38 @@
-import React, { useState } from "react"
-import { useSearchParams } from "react-router-dom";
+import React, { useEffect } from "react";
+import ReactModal from 'react-modal';
+import { useSelector, useDispatch } from "react-redux";
+import { useParams } from "react-router-dom";
 
 import AtndHeader from "./AtndHeader";
 import AtndFilter from "./AtndFilter";
-import AtndList from "./AtndList";
+import AtndRoster from "./AtndRoster";
+import Export from "./Export";
 
-import { classes, marks } from "../utils/loader";
-
-const getDefaultFilters = (aClass) => {
-  return {
-    rooms: aClass.rooms.map(e => e.rid),
-    marks: Object.keys(marks),
-    keyword: ''
-  };
-}
+import { loadClass, resetClass, fetchPage } from "../utils/paramSlice";
 
 const AtndLayout = (props) => {
-  let [params, setParams] = useSearchParams();
+  const dispatch = useDispatch();
 
-  const aClass = classes[parseInt(params.get('cid'))];
+  const showExport = useSelector((state) => state.param.showExport);
+  const { cid, pid } = useParams();
 
-  const [filters, setFilters] = useState(getDefaultFilters(aClass));
+  useEffect(() => {
+    return () => dispatch(resetClass());
+  }, [dispatch]);
 
-  const handleMovePage = (nextPid) => {
-    setParams({ ...Object.fromEntries(params), pid: nextPid });
-  }
-
-  const handleFilterChange = (newFilters) => {
-    setFilters(newFilters);
-  }
+  useEffect(() => dispatch(loadClass(parseInt(cid))), [dispatch, cid]);
+  useEffect(() => dispatch(fetchPage(parseInt(pid))), [dispatch, pid]);
 
   return (
     <>
-      <AtndHeader aClass={aClass} pid={parseInt(params.get('pid'))}
-                  onMove={handleMovePage} />
-
-      <AtndFilter roomList={aClass.rooms} filters={filters}
-                  onUpdate={handleFilterChange} />
-
-      <AtndList aClass={aClass} pid={parseInt(params.get('pid'))}
-                filters={filters} />
+      <AtndHeader />
+      <AtndFilter />
+      <AtndRoster />
+      <ReactModal
+        appElement={document.getElementById('root')}
+        isOpen={showExport}>
+        <Export />
+      </ReactModal>
     </>
   )
 }

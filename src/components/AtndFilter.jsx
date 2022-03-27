@@ -1,42 +1,25 @@
-import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+
+import { updateRoom, updateMark, setKeyword } from "../utils/filterSlice";
 
 import { marks } from "../utils/loader";
 
 const AtndFilter = (props) => {
-  const [filters, setFilters] = useState(props.filters);
-
-  const handleChange = (e) => {
-    const key = e.target.getAttribute('data-key');
-    let value = e.target.getAttribute('data-value');
-    value = isNaN(parseInt(value)) ? value : parseInt(value);
-
-    if (key === 'keyword'){
-      setFilters({ ...filters, [key]: e.target.value });
-      return;
-    }
-
-    const values = filters[key].includes(value)
-                    ? filters[key].filter(e => e !== value)
-                    : filters[key].concat([value]);
-    
-    setFilters({ ...filters, [key]: values });
-  }
-
-  useEffect(() => {
-    props.onUpdate(filters);
-  }, [filters]);
+  const rooms = useSelector((state) => state.param.aClass.rooms);
+  const filters = useSelector((state) => state.filter);
+  const dispatch = useDispatch();
 
   return (
     <>
       <div>
         <div>
           {/* Classrooms */}
-          {props.roomList.map(e => (
+          {rooms?.map(e => (
             <label key={e.rid}>
               <input type="checkbox" defaultChecked={filters.rooms.includes(e.rid)}
-                     onChange={handleChange} data-key="rooms" data-value={e.rid} />
+                      onChange={()=>dispatch(updateRoom(e.rid))} />
               {e.label}
-            </label> 
+            </label>
           ))}
         </div>
 
@@ -45,16 +28,16 @@ const AtndFilter = (props) => {
           {Object.keys(marks).map(k => (
             <label key={k}>
               <input type="checkbox" defaultChecked={filters.marks.includes(k)}
-                     onChange={handleChange} data-key="marks" data-value={k} />
+                      onChange={()=>dispatch(updateMark(k))} />
               {marks[k].emoji} {marks[k].label}
-            </label> 
+            </label>
           ))}
         </div>
       </div>
 
       <div>
-        <input type="text" data-key="keyword" placeholder="Name or ID"
-               value={filters.keyword} onChange={handleChange} />
+        <input type="text" value={filters.keyword} placeholder="Name or ID"
+                onChange={(e)=>dispatch(setKeyword(e.target.value))} />
       </div>
     </>
   )

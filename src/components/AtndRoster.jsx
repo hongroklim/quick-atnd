@@ -1,17 +1,32 @@
-import React, { useCallback } from "react";
-import { useLiveQuery } from 'dexie-react-hooks';
+import React, { useCallback, useMemo } from "react";
+import { useSelector } from "react-redux";
+import Hangul from "hangul-js";
 
 import { db } from "../utils/db";
 import { marks, MC_EMPTY, MC_ATTEND } from "../utils/loader";
 
-const AtndList = ({ aClass, pid, filters }) => {
-  const students = useLiveQuery(() =>
-    db.students.where('cid').equals(aClass.cid).toArray(),
-    [aClass]);
+const getChoes = (str) => Hangul.disassemble(str, true)
+                                .map(arr => arr[0]).join('');
 
-  const atnds = useLiveQuery(() =>
-    db.marks.where('pid_sid').startsWith(`${pid}_`).toArray(),
-    [pid], []);
+const AtndRoster = (props) => {
+  const aClass = useSelector((state) => state.param.aClass);
+  const pid = useSelector((state) => state.param.page.pid);
+  const filters = useSelector((state) => state.filter);
+
+  const students = useSelector((state) => state.roster.students);
+  const atnds = useSelector((state) => state.roster.atnds);
+
+  const kwdSearcher = useMemo(() =>{
+    return new Hangul.Searcher(filters.keyword);
+  }, [filters.keyword]);
+
+  const getRoomLabel = useCallback((rid) => {
+    if(!aClass.rooms) return null;
+
+    const room = aClass.rooms.find(e => e.rid === rid);
+    return room ? room.label : null;
+
+  }, [aClass.rooms]);
 
   const handleMark = async (e) => {
     const sid = e.currentTarget.getAttribute('data-sid');
@@ -27,11 +42,6 @@ const AtndList = ({ aClass, pid, filters }) => {
     }
   }
 
-  const getRoomLabel = useCallback((rid) => {
-    const room = aClass.rooms.find(e => e.rid === rid);
-    return room ? room.label : null;
-  }, [aClass.rooms]);
-
   const getMarkCode = (sid) => {
     const mark = atnds.find(e => e.pid_sid.endsWith(sid));
     return mark ? mark.mcd : MC_EMPTY;
@@ -39,14 +49,29 @@ const AtndList = ({ aClass, pid, filters }) => {
 
   const getMarkEmoji = (sid) => marks[getMarkCode(sid)].emoji;
 
+  const matchesKeyword = (stud) => {
+    const intKeyword = parseInt(filters.keyword);
+
+    if(isNaN(intKeyword)){
+      // Search for name
+      return kwdSearcher.search(stud.name) >= 0
+            || kwdSearcher.search(getChoes(stud.name)) >= 0;
+    }else{
+      // Search for student id
+      return stud.sid.indexOf(filters.keyword) >= 0;
+    }
+  }
+
   const filterings = (e => {
     return filters.rooms.includes(e.rid)
-          && filters.marks.includes(getMarkCode(e.sid));
+          && filters.marks.includes(getMarkCode(e.sid))
+          && matchesKeyword(e);
   });
 
   return (
     <>
       <div>
+        <span>출석: {atnds.filter(e => e.mcd === MC_ATTEND).length}</span>
       </div>
       <div>
         <table>
@@ -76,4 +101,4 @@ const AtndList = ({ aClass, pid, filters }) => {
   )
 }
 
-export default AtndList;
+export default AtndRoster;
