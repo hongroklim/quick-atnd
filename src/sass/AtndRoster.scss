@@ -1,0 +1,52 @@
+@import "./variables";
+
+.roster-wrapper {
+  margin-top: 0.5em;
+}
+
+.roster-table {
+  overflow: auto;
+  width: 100%;
+  border-collapse: collapse;
+
+  th, td {
+    -moz-user-select: -moz-none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+
+    @media screen and (max-width: $small-screen) {
+      font-size: 0.85em;
+    }
+  }
+
+  thead th {
+    // position: sticky;
+    // top: 0;
+    // z-index: 1;
+    background-color: $yellow-l1;
+  }
+
+  tr {
+    border-bottom: 1.2px $yellow-d2 solid;
+    cursor: pointer;
+
+    &.mark-Y {
+      background-color: rgba(0, 210, 0, 0.4);
+    }
+  }
+
+  td {
+    text-align: center;
+    padding: 0.5em 0;
+
+    &:first-child {
+      font-size: 0.75em;
+    }
+
+
+  }
+}
+
+.roster-table {
+  color: red;
+}

@@ -1,43 +1,55 @@
 import { useSelector, useDispatch } from "react-redux";
 
 import { updateRoom, updateMark, setKeyword } from "../utils/filterSlice";
+import { toggleTryMark } from "../utils/paramSlice";
 
-import { marks } from "../utils/loader";
+import { marks, MC_ATTEND } from "../utils/loader";
+
+import classnames from "classnames";
+import "../sass/AtndFilter.scss";
 
 const AtndFilter = (props) => {
+  const dispatch = useDispatch();
+
   const rooms = useSelector((state) => state.param.aClass.rooms);
   const filters = useSelector((state) => state.filter);
-  const dispatch = useDispatch();
+  const atnds = useSelector((state) => state.roster.atnds);
+
+  const handleKeyPress = (e) => {
+    if(e.key === 'Enter'){
+      dispatch(toggleTryMark())
+    }
+  }
 
   return (
     <>
-      <div>
-        <div>
-          {/* Classrooms */}
-          {rooms?.map(e => (
-            <label key={e.rid}>
-              <input type="checkbox" defaultChecked={filters.rooms.includes(e.rid)}
-                      onChange={()=>dispatch(updateRoom(e.rid))} />
-              {e.label}
-            </label>
-          ))}
-        </div>
-
-        <div>
-          {/* Attendance marks */}
-          {Object.keys(marks).map(k => (
-            <label key={k}>
-              <input type="checkbox" defaultChecked={filters.marks.includes(k)}
-                      onChange={()=>dispatch(updateMark(k))} />
-              {marks[k].emoji} {marks[k].label}
-            </label>
-          ))}
-        </div>
+      <div className="rooms-wrapper">
+        {/* Classrooms */}
+        {rooms?.map(e => (
+          <div className={classnames('checkbox', {active: filters.rooms.includes(e.rid)})}
+                  key={e.rid} onClick={()=>dispatch(updateRoom(e.rid))}>
+            {e.label}
+          </div>
+        ))}
       </div>
 
-      <div>
+      <div className="marks-wrapper">
+        {/* Attendance marks */}
+        {Object.keys(marks).map(k => (
+          <div className={classnames('checkbox', {active: filters.marks.includes(k)})}
+                    key={k} onClick={()=>dispatch(updateMark(k))}>
+            {marks[k].emoji}
+          </div>
+        ))}
+      </div>
+
+      <div className="input-wrapper">
         <input type="text" value={filters.keyword} placeholder="Name or ID"
+                autoComplete="false"
+                onFocus={()=>dispatch(setKeyword(''))}
+                onKeyPress={handleKeyPress}
                 onChange={(e)=>dispatch(setKeyword(e.target.value))} />
+        <span>🟩 {atnds.filter(e => e.mcd === MC_ATTEND).length}</span>
       </div>
     </>
   )

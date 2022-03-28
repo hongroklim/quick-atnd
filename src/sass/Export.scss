@@ -1,0 +1,42 @@
+@import "./variables";
+
+.export-header-wrapper {
+  .class-label {
+    font-weight: bold;
+    margin-right: 0.25em;
+  }
+
+  .page-label {
+    margin-right: 0.25em;
+  }
+
+  button {
+    padding: 0.2em 0.5em;
+    background-color: $yellow-l3;
+    border: 0.5px $grey solid;
+    border-radius: 0.5em;
+    box-shadow: 0.5px 0.5px 0.5px;
+    font-size: 0.75em;
+    cursor: pointer;
+  }
+}
+
+.export-body-wrapper {
+  display: inline-block;
+  width: 100%;
+
+  &>textarea {
+    float:left;
+    width: calc(50% - 20px);
+    max-width: 300px;
+    resize: none;
+
+    &:first-child {
+      background-color: $yellow-l4;
+    }
+
+    &:last-child {
+      margin-left: 6px;
+    }
+  }
+}

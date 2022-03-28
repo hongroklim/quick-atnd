@@ -1,14 +1,21 @@
-import React, { useCallback, useMemo } from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect, useCallback, useMemo } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import Hangul from "hangul-js";
 
 import { db } from "../utils/db";
-import { marks, MC_EMPTY, MC_ATTEND } from "../utils/loader";
+import { MC_EMPTY, MC_ATTEND } from "../utils/loader";
+
+import { setKeyword } from "../utils/filterSlice";
+import { toggleTryMark } from "../utils/paramSlice";
+
+import "../sass/AtndRoster.scss";
 
 const getChoes = (str) => Hangul.disassemble(str, true)
                                 .map(arr => arr[0]).join('');
 
 const AtndRoster = (props) => {
+  const dispatch = useDispatch();
+
   const aClass = useSelector((state) => state.param.aClass);
   const pid = useSelector((state) => state.param.page.pid);
   const filters = useSelector((state) => state.filter);
@@ -28,8 +35,7 @@ const AtndRoster = (props) => {
 
   }, [aClass.rooms]);
 
-  const handleMark = async (e) => {
-    const sid = e.currentTarget.getAttribute('data-sid');
+  const handleMark = async (sid) => {
     const mark = await db.marks.where('pid_sid').equals(`${pid}_${sid}`).first();
 
     const nextMarkCode = (!mark || mark.mcd === MC_EMPTY) ? MC_ATTEND : MC_EMPTY;
@@ -46,8 +52,6 @@ const AtndRoster = (props) => {
     const mark = atnds.find(e => e.pid_sid.endsWith(sid));
     return mark ? mark.mcd : MC_EMPTY;
   }
-
-  const getMarkEmoji = (sid) => marks[getMarkCode(sid)].emoji;
 
   const matchesKeyword = (stud) => {
     const intKeyword = parseInt(filters.keyword);
@@ -68,36 +72,41 @@ const AtndRoster = (props) => {
           && matchesKeyword(e);
   });
 
+  const filteredList = students?.filter(filterings) || [];
+
+  const tryMark = useSelector((state) => state.param.tryMark);
+  useEffect(() => {
+    if(tryMark && filteredList.length === 1){
+      handleMark(filteredList[0].sid);
+      dispatch(setKeyword(''));
+      dispatch(toggleTryMark());
+    }
+  }, [tryMark, filteredList, dispatch, handleMark ]);
+
   return (
-    <>
-      <div>
-        <span>출석: {atnds.filter(e => e.mcd === MC_ATTEND).length}</span>
-      </div>
-      <div>
-        <table>
-          <thead>
-            <tr>
-              <th>강의실</th>
-              <th>전공</th>
-              <th>학번</th>
-              <th>이름</th>
-              <th>출석</th>
+    <div className="roster-wrapper">
+      <table className="roster-table">
+        <thead>
+          <tr>
+            <th>강의실</th>
+            <th>전공</th>
+            <th>학번</th>
+            <th>이름</th>
+          </tr>
+        </thead>
+        <tbody>
+          {students?.filter(filterings).map(e => (
+            <tr onClick={()=>handleMark(e.sid)} key={e.sid}
+                  className={`mark-${getMarkCode(e.sid)}`}>
+              <td>{getRoomLabel(e.rid)}</td>
+              <td>{e.major}</td>
+              <td>{e.sid}</td>
+              <td>{e.name}</td>
             </tr>
-          </thead>
-          <tbody>
-            {students?.filter(filterings).map(e => (
-              <tr onClick={handleMark} data-sid={e.sid} key={e.sid}>
-                <td>{getRoomLabel(e.rid)}</td>
-                <td>{e.major}</td>
-                <td>{e.sid}</td>
-                <td>{e.name}</td>
-                <td>{getMarkEmoji(e.sid)}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </>
+          ))}
+        </tbody>
+      </table>
+    </div>
   )
 }
 

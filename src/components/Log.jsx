@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 import LogFilter from "./LogFilter";
@@ -23,8 +24,8 @@ const includedSid = (sid, objArr) => {
   }).some(e => e);
 }
 
-const regexp = /LOG(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})(\d{3}).*/g;
-const parseTS = (key) => key.replace(regexp, '$1:$2:$3 $4:$5:$6.$7');
+const regexp = /LOG(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})(\d{0,3})\d.{2}/g;
+const parseTS = (key) => key.replace(regexp, '$1.$2.$3 $4:$5:$6.$7');
 
 const parseReqValues = (arr) => {
   return arr?.map(e => {
@@ -46,6 +47,7 @@ const getRow = (key, obj) => {
 }
 
 const Log = () => {
+  const navigate = useNavigate();
   const [keyLength] = useState(window.localStorage.length);
   const filter = useSelector((state) => state.logFilter);
 
@@ -66,6 +68,9 @@ const Log = () => {
 
   return (
     <>
+      <div>
+        <button onClick={() => navigate('/')}>go main</button>
+      </div>
       <LogFilter />
       <div>
         <table>

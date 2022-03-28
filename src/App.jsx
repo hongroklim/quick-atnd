@@ -7,7 +7,7 @@ import Log from "./components/Log"
 
 function App() {
   return (
-    <div className="app-wrapper">
+    <div>
       <Routes>
         <Route path="" element={<ClassList />} />
         <Route path="/roster/:cid/:pid" element={<AtndLayout />} />

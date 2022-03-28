@@ -4,6 +4,8 @@ import { db } from "../utils/db";
 
 import { classes } from "../utils/loader";
 
+import "../sass/ClassList.scss";
+
 const ClassList = () => {
   const navigate = useNavigate();
 
@@ -34,25 +36,30 @@ const ClassList = () => {
 
   return (
     <div>
-      <div>Quick Attendance</div>
-      <ul>
+      <div className="logo-wrapper">
+        <img src="/logo.png" alt="Quick Attendance" className="logo" />
+      </div>
+
+      <div className="class-wrapper">
         {Object.keys(classes).map(k => classes[k]).map(c => (
-          <li onClick={() => handleLink(c.cid)} key={c.cid}>
-            {c.label}
-          </li>
+          <div onClick={() => handleLink(c.cid)} key={c.cid} className="class-label">
+            <span>{c.label}</span>
+          </div>
         ))}
-      </ul>
-      <ul>
-        <li onClick={() => navigate('/log')}>
+      </div>
+
+      <div className="link-wrapper">
+        <div onClick={() => navigate('/log')}>
           Log
-        </li>
-        <li onClick={handleReset}>
+        </div>
+        <div onClick={handleReset}>
           Reset
-        </li>
-        <li>
-          <a href="https://github.com/hongroklim/quick-attendance">Github</a>
-        </li>
-      </ul>
+        </div>
+        <div>
+          <a href="https://github.com/hongroklim/quick-atnd"
+              target="_blank" rel="noreferrer">Github</a>
+        </div>
+      </div>
     </div>
   )
 }

@@ -1,0 +1,36 @@
+@import "./variables";
+
+* {
+  font-family: HelveticaNeue-Light,AppleSDGothicNeo-Light,'Malgun Gothic','맑은 고딕',sans-serif;
+  line-height: 1.5;
+  color: $black;
+  transition: 0.2s;
+  font-size: 15px;
+
+  @media screen and (min-width: $medium-screen) {
+    font-size: 17px;
+  }
+
+  @media screen and (min-width: $large-screen) {
+    font-size: 19px;
+  }
+}
+
+body {
+  max-width: 800px;
+  background: #f4f4f4;
+  word-break: break-all;
+  -webkit-text-size-adjust: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  @media screen and (min-width: $medium-screen) {
+    margin: auto;
+    padding: 0.5em;
+  }
+}
+
+a[target="_blank"]::after {
+  content: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAQElEQVR42qXKwQkAIAxDUUdxtO6/RBQkQZvSi8I/pL4BoGw/XPkh4XigPmsUgh0626AjRsgxHTkUThsG2T/sIlzdTsp52kSS1wAAAABJRU5ErkJggg==);
+  margin: 0 3px 0 5px;
+}

@@ -6,6 +6,8 @@ import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from "../utils/db";
 import { toggleShowExport } from "../utils/paramSlice";
 
+import "../sass/AtndHeader.scss";
+
 const fetchPrevNext = async (cid, pid) => {
   // Early return
   if(!cid || !pid) return null;
@@ -74,23 +76,29 @@ const AtndHeader = () => {
   }
 
   return (
-    <div>
-      <button onClick={() => navigate('/')}>go main</button>
-      <button onClick={() => handleMove(prevPid)}
-              disabled={!prevPid}> ◄◄ </button>
-      <div>
-        <div>{aClass.label}</div>
-        <div>
-          {page.label}
-          <button onClick={handleRename}> ✏️ </button>
-          <button onClick={()=>dispatch(toggleShowExport())}> 📄</button>
-          <button onClick={handleDelete}> ❌ </button>
+    <>
+      <div className="header-container">
+        <div className="breadcrumb">
+          <span onClick={()=>navigate('/')} className="clickable">Home</span>
+          <span className="sep" />
+          <span>{aClass.label}</span>
+        </div>
+        <div className="btn-wrapper">
+          <button onClick={()=>dispatch(toggleShowExport())}>Export</button>
+          <button onClick={handleDelete}>X</button>
         </div>
       </div>
-      {!nextPid
-        ? <button onClick={handleAppend}> + </button>
-        : <button onClick={() => handleMove(nextPid)}> ►► </button>}
-    </div>
+
+      <div className="page-wrapper">
+        <button onClick={() => handleMove(prevPid)} disabled={!prevPid}><span>Prev</span></button>
+
+          <span onClick={handleRename} className="page-label">{page.label}</span>
+
+          {!nextPid
+            ? <button onClick={handleAppend} className="add"><span>Add</span></button>
+            : <button onClick={() => handleMove(nextPid)}><span>Next</span></button>}
+      </div>
+    </>
   )
 }
 

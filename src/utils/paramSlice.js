@@ -6,7 +6,7 @@ import { fetchStudents, fetchAtnds } from "./rosterSlice";
 import { db } from "./db";
 import { classes } from "./loader";
 
-const DEFAULT_PARAM = { aClass: {}, page: {}, showExport: false };
+const DEFAULT_PARAM = { aClass: {}, page: {}, showExport: false, tryMark: false };
 
 export const paramSlice = createSlice({
   name: 'paramSlice',
@@ -15,7 +15,8 @@ export const paramSlice = createSlice({
     loadClass: (state, action) => { state.aClass = action.payload },
     resetClass: (state) => (DEFAULT_PARAM),
     loadPage: (state, action) => { state.page = action.payload },
-    toggleShowExport: (state) => { state.showExport = !state.showExport }
+    toggleShowExport: (state) => { state.showExport = !state.showExport },
+    toggleTryMark: (state) => { state.tryMark = !state.tryMark }
   }
 })
 
@@ -39,5 +40,5 @@ export const fetchPage = (pid, reloadAtnds=true) => {
   }
 }
 
-export const { resetClass, toggleShowExport } = paramSlice.actions
+export const { resetClass, toggleShowExport, toggleTryMark } = paramSlice.actions
 export default paramSlice.reducer

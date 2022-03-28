@@ -1,0 +1,82 @@
+@import "./variables";
+
+.header-container{
+  width: 100%;
+  display: inline-block;
+
+  .breadcrumb {
+    float: left;
+    font-weight: bold;
+
+    .clickable {
+      color: $yellow-d4;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    .sep {
+      margin: 0 0.5em;
+      &:after {
+        content: '/';
+      }
+    }
+  }
+
+  .btn-wrapper {
+    margin-left: auto;
+    width: fit-content;
+    float: right;
+    line-height: 0.5em;
+
+    button {
+      margin: 0 0 0 0.5em;
+      padding: 0.2em 0.5em;
+      background-color: $yellow-l3;
+      border: 0.5px $grey solid;
+      border-radius: 0.5em;
+      box-shadow: 0.5px 0.5px 0.5px;
+      font-size: 0.75em;
+      cursor: pointer;
+    }
+  }
+}
+
+.page-wrapper {
+  text-align: center;
+  padding-bottom: 0.5em;
+  border-bottom: 0.5px $grey solid;
+
+    button {
+      margin: 0 0.5em;
+      padding: 0 0.5em;
+      background-color: $yellow-d1;
+      border: 0.5px $grey solid;
+      border-radius: 0.5em;
+      box-shadow: 0.5px 0.5px 0.5px;
+      line-height: 1.25em;
+      cursor: pointer;
+
+      &:disabled {
+        background-color: $yellow-l5;
+        box-shadow: none;
+        cursor: default;
+
+        span {
+          color: $grey;
+        }
+      }
+
+      &.add {
+        background-color: $yellow-l4;
+      }
+
+      span {
+        font-size: 1em;
+      }
+    }
+
+  .page-label {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+}

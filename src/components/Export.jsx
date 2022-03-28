@@ -5,6 +5,8 @@ import { marks } from "../utils/loader";
 
 import { toggleShowExport } from "../utils/paramSlice";
 
+import "../sass/Export.scss";
+
 const Export = (props) => {
   const dispatch = useDispatch();
 
@@ -38,14 +40,16 @@ const Export = (props) => {
 
   return (
     <>
-      <div>
-        <span>{param.aClass.label}</span>
-        <span>{param.page.label}</span>
-        <button onClick={()=>dispatch(toggleShowExport())}>close</button>
+      <div className="export-header-wrapper">
+        <span className="class-label">{param.aClass.label}</span>
+        <span className="page-label">{param.page.label}</span>
+        <button onClick={()=>dispatch(toggleShowExport())}>Close</button>
       </div>
-      <div>
-        <textarea value={studentsToString(sortedStudents)} readOnly={true} />
-        <textarea defaultValue={atndsToString(sortedAtnds)} />
+      <div className="export-body-wrapper">
+        <textarea value={studentsToString(sortedStudents)}
+                  rows={sortedStudents.length} readOnly={true} />
+        <textarea defaultValue={atndsToString(sortedAtnds)}
+                  rows={sortedAtnds.length} />
       </div>
     </>
   )
