@@ -84,8 +84,8 @@ const AtndHeader = () => {
           <span>{aClass.label}</span>
         </div>
         <div className="btn-wrapper">
-          <button onClick={()=>dispatch(toggleShowExport())}>Export</button>
-          <button onClick={handleDelete}>X</button>
+          <button onClick={()=>dispatch(toggleShowExport())}><span>Export</span></button>
+            <button onClick={handleDelete}><span>Delete</span></button>
         </div>
       </div>
 

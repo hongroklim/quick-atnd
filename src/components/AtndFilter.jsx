@@ -38,14 +38,14 @@ const AtndFilter = (props) => {
         {Object.keys(marks).map(k => (
           <div className={classnames('checkbox', {active: filters.marks.includes(k)})}
                     key={k} onClick={()=>dispatch(updateMark(k))}>
-            {marks[k].emoji}
+            <span>{marks[k].emoji}</span>
           </div>
         ))}
       </div>
 
       <div className="input-wrapper">
-        <input type="text" value={filters.keyword} placeholder="Name or ID"
-                autoComplete="false"
+        <input type="text" value={filters.keyword} placeholder="Keyword"
+                autoComplete="off"
                 onFocus={()=>dispatch(setKeyword(''))}
                 onKeyPress={handleKeyPress}
                 onChange={(e)=>dispatch(setKeyword(e.target.value))} />

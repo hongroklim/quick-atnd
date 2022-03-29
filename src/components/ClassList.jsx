@@ -42,23 +42,24 @@ const ClassList = () => {
 
       <div className="class-wrapper">
         {Object.keys(classes).map(k => classes[k]).map(c => (
-          <div onClick={() => handleLink(c.cid)} key={c.cid} className="class-label">
+          <button onClick={() => handleLink(c.cid)} key={c.cid} className="class-label">
             <span>{c.label}</span>
-          </div>
+          </button>
         ))}
       </div>
 
       <div className="link-wrapper">
-        <div onClick={() => navigate('/log')}>
-          Log
-        </div>
-        <div onClick={handleReset}>
-          Reset
-        </div>
-        <div>
-          <a href="https://github.com/hongroklim/quick-atnd"
-              target="_blank" rel="noreferrer">Github</a>
-        </div>
+        <button onClick={() => navigate('/log')}>
+          <span>Log</span>
+        </button>
+        <button onClick={handleReset}>
+          <span>Reset</span>
+        </button>
+        <button onClick={()=>{
+            window.open('https://github.com/hongroklim/quick-atnd')
+          }} className="a-blank">
+          <span>Github</span>
+        </button>
       </div>
     </div>
   )

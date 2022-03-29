@@ -1,4 +1,5 @@
 @import "./variables";
+@import "./base";
 
 .header-container{
   width: 100%;
@@ -29,14 +30,8 @@
     line-height: 0.5em;
 
     button {
+      @include button-click();
       margin: 0 0 0 0.5em;
-      padding: 0.2em 0.5em;
-      background-color: $yellow-l3;
-      border: 0.5px $grey solid;
-      border-radius: 0.5em;
-      box-shadow: 0.5px 0.5px 0.5px;
-      font-size: 0.75em;
-      cursor: pointer;
     }
   }
 }
@@ -47,31 +42,14 @@
   border-bottom: 0.5px $grey solid;
 
     button {
-      margin: 0 0.5em;
-      padding: 0 0.5em;
-      background-color: $yellow-d1;
-      border: 0.5px $grey solid;
-      border-radius: 0.5em;
-      box-shadow: 0.5px 0.5px 0.5px;
-      line-height: 1.25em;
-      cursor: pointer;
-
-      &:disabled {
-        background-color: $yellow-l5;
-        box-shadow: none;
-        cursor: default;
-
-        span {
-          color: $grey;
-        }
-      }
+      @include button-click();
 
       &.add {
         background-color: $yellow-l4;
-      }
 
-      span {
-        font-size: 1em;
+        &:hover {
+          background-color: $yellow-l2;
+        }
       }
     }
 

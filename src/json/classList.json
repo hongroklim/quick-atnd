@@ -4,9 +4,9 @@
     "label": "2022-1 AI-X:딥러닝",
     "filepath": "2022-1-aix-dl.json",
     "rooms": [
-      {"rid": 1, "label": "사범대 312"},
-      {"rid": 2, "label": "2공학관 504"},
-      {"rid": 3, "label": "2공학관 505"}
+      {"rid": 1, "label": "2공학관 504"},
+      {"rid": 2, "label": "2공학관 505"},
+      {"rid": 3, "label": "사범대 312"}
     ]
   }
 ]

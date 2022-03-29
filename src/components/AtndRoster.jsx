@@ -89,7 +89,7 @@ const AtndRoster = (props) => {
         <thead>
           <tr>
             <th>강의실</th>
-            <th>전공</th>
+            <th>학과</th>
             <th>학번</th>
             <th>이름</th>
           </tr>

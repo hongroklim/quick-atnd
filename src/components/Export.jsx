@@ -43,7 +43,7 @@ const Export = (props) => {
       <div className="export-header-wrapper">
         <span className="class-label">{param.aClass.label}</span>
         <span className="page-label">{param.page.label}</span>
-        <button onClick={()=>dispatch(toggleShowExport())}>Close</button>
+        <button onClick={()=>dispatch(toggleShowExport())}><span>Close</span></button>
       </div>
       <div className="export-body-wrapper">
         <textarea value={studentsToString(sortedStudents)}
