@@ -36,3 +36,13 @@
     }
   }
 }
+
+.export-desc-wrapper {
+  &>span {
+    font-size: 0.8em;
+
+    &:before {
+      content: '* ';
+    }
+  }
+}

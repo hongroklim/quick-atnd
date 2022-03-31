@@ -1,0 +1,44 @@
+@import "./variables";
+@import "./base";
+
+.log-table-wrapper {
+  margin-top: 0.5em;
+  width: 100%;
+  height: calc(100vh - 200px);
+  overflow: auto;
+  border: 1.5px $yellow-d3 solid;
+}
+
+.log-table {
+  display: block;
+  white-space: nowrap;
+  border-collapse: collapse;
+
+  thead th {
+    padding: 0 0.25em;
+    text-align: left;
+    background-color: $yellow-l1;
+    font-size: 0.75em;
+  }
+
+  tr {
+    border-bottom: 1.2px $yellow-d2 solid;
+  }
+
+  td {
+    border-right: 1.2px $yellow-d2 solid;
+    padding: 0 0.25em;
+    font-size: 0.75em;
+
+    &:last-child{
+      border-right: none;
+    }
+
+    pre {
+      font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+      font-size: 0.75em;
+      margin: 0;
+      line-height: 1;
+    }
+  }
+}

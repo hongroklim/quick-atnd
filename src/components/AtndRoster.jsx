@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useMemo } from "react";
+import React, { useEffect, useCallback, useMemo, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Hangul from "hangul-js";
 
@@ -72,16 +72,17 @@ const AtndRoster = (props) => {
           && matchesKeyword(e);
   });
 
-  const filteredList = students?.filter(filterings) || [];
-
+  // Press enter to mark a single student
   const tryMark = useSelector((state) => state.param.tryMark);
+  const refTbody = useRef(null);
+
   useEffect(() => {
-    if(tryMark && filteredList.length === 1){
-      handleMark(filteredList[0].sid);
+    if(tryMark && refTbody.current && refTbody.current.childElementCount === 1){
+      handleMark(refTbody.current.childNodes[0].getAttribute('data-sid'));
       dispatch(setKeyword(''));
       dispatch(toggleTryMark());
     }
-  }, [tryMark, filteredList, dispatch, handleMark ]);
+  }, [tryMark, dispatch]);
 
   return (
     <div className="roster-wrapper">
@@ -94,9 +95,9 @@ const AtndRoster = (props) => {
             <th>이름</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody ref={refTbody}>
           {students?.filter(filterings).map(e => (
-            <tr onClick={()=>handleMark(e.sid)} key={e.sid}
+            <tr onClick={()=>handleMark(e.sid)} key={e.sid} data-sid={e.sid}
                   className={`mark-${getMarkCode(e.sid)}`}>
               <td>{getRoomLabel(e.rid)}</td>
               <td>{e.major}</td>

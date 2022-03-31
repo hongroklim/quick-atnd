@@ -7,6 +7,9 @@ import {
   updateValue
 } from "../utils/logFilterSlice";
 
+import classnames from "classnames";
+import "../sass/LogFilter.scss";
+
 const LogFilter = (props) => {
   const dispatch = useDispatch();
 
@@ -22,26 +25,25 @@ const LogFilter = (props) => {
 
   return (
     <div>
-      <div>
-        <span>date</span>
-        <input type="date" data-key="date" value={filter.date}
-          onChange={(e)=>handleValueChange('date', e.target.value)} />
-        <button onClick={()=>handleValueChange('date', '')}>reset</button>
-      </div>
       {LOGFILTER_LISTS.map(k => (
-        <div key={k}>
-          <span>{k}</span>
+        <div className="log-list-wrapper" key={k}>
+          <div className="label">{k}</div>
           {DEFAULT_LOGFILTER[k].map(e => (
-            <label key={e}>
-              <input type="checkbox" defaultChecked={filter[k].includes(e)}
-                  onChange={()=>handleListChange(k, e)} />
+            <div className={classnames('checkbox', {active: filter[k].includes(e)})}
+                  onClick={()=>handleListChange(k, e)} key={e}>
               {e}
-            </label>
+            </div>
           ))}
         </div>
       ))}
-      <div>
-        <span>sid</span>
+      <div className="log-text-wrapper">
+        <span className="label">date</span>
+        <input type="date" data-key="date" value={filter.date}
+          onChange={(e)=>handleValueChange('date', e.target.value)} />
+        <button onClick={()=>handleValueChange('date', '')}>clear</button>
+      </div>
+      <div className="log-text-wrapper">
+        <span className="label">sid</span>
         <input type="text" data-key="sid" value={filter.sid} placeholder=""
                 onChange={(e)=>handleValueChange('sid', e.target.value)} />
       </div>

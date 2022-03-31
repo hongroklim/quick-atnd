@@ -10,6 +10,8 @@ import {
   SID_KEYS
 } from "../utils/logFilterSlice";
 
+import "../sass/Log.scss";
+
 const logFilterKeys = Object.keys(DEFAULT_LOGFILTER);
 
 const includedDate = (date, key) => {
@@ -18,9 +20,7 @@ const includedDate = (date, key) => {
 
 const includedSid = (sid, objArr) => {
   return objArr.map(e => {
-    return SID_KEYS
-            .map(k => e[k] && e[k].includes(sid))
-            .some(e => e);
+    return SID_KEYS.filter(k => e[k]?.toString().includes(sid)).length > 0;
   }).some(e => e);
 }
 
@@ -28,9 +28,9 @@ const regexp = /LOG(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})(\d{0,3})\d.{2}/g;
 const parseTS = (key) => key.replace(regexp, '$1.$2.$3 $4:$5:$6.$7');
 
 const parseReqValues = (arr) => {
-  return arr?.map(e => {
-    return Object.keys(e).sort().map(k => `${k}: ${e[k]}`).join(', ')
-  }).join('\n')
+  return arr?.map(e =>
+    `{${(Object.keys(e).sort().map(k => `${k}: ${e[k]}`).join(', '))}}`
+  ).join('\n')
 }
 
 const getRow = (key, obj) => {
@@ -40,8 +40,8 @@ const getRow = (key, obj) => {
       <td>{obj.pos}</td>
       <td>{obj.tblNm}</td>
       <td>{obj.type}</td>
-      <td>{parseReqValues(obj.reqValues)}</td>
-      <td>{obj.results?.toString()}</td>
+      <td><pre>{parseReqValues(obj.reqValues)}</pre></td>
+      <td><pre>{`[${obj.results?.join(',\n') || ''}]`}</pre></td>
     </tr>
   )
 }
@@ -68,12 +68,16 @@ const Log = () => {
 
   return (
     <>
-      <div>
-        <button onClick={() => navigate('/')}>go main</button>
+      <div className="header-container">
+        <div className="breadcrumb">
+          <span onClick={()=>navigate('/')} className="clickable">Home</span>
+          <span className="sep" />
+          <span>Log</span>
+        </div>
       </div>
       <LogFilter />
-      <div>
-        <table>
+      <div className="log-table-wrapper">
+        <table className="log-table">
           <thead>
             <tr>
               <th>Timestamp</th>

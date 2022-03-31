@@ -1,0 +1,36 @@
+@import "./variables";
+@import "./base";
+
+.log-list-wrapper {
+  @include toggle-wrapper();
+  margin-right: 1em;
+
+  &>.label {
+     float: left;
+     font-weight: bold;
+  }
+}
+
+.log-text-wrapper {
+  display: inline-block;
+  margin-right: 1em;
+
+  &>.label {
+    float: left;
+    font-weight: bold;
+  }
+
+  input {
+    margin-left: 0.25em;
+    line-height: 1;
+
+    &[type='text'] {
+      width: 150px;
+    }
+  }
+
+  button {
+    @include button-click();
+    margin: 0;
+  }
+}

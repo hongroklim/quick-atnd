@@ -1,4 +1,4 @@
-# [Quick Attendance](https://quick-atnd.herokuapp.com)
+# Quick Attendance
 
 > Quickly and Correctly Check Attendance
 

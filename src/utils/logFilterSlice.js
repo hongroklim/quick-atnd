@@ -2,9 +2,9 @@ import { createSlice } from "@reduxjs/toolkit";
 
 export const DEFAULT_LOGFILTER = {
   date: '',
-  pos: ['1', '2'],
+  pos: ['1', '2', '3'],
   tblNm: ['pages', 'students', 'marks'],
-  type: ['add', 'put', 'delete', 'deleteRange'],
+  type: ['add', 'put', 'delete'],
   sid: ''
 };
 
